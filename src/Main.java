@@ -15,10 +15,24 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		// Fist save the data read from a file.
+		/** 
+		 * Fist: save the data read from a file.
+		 */
 	    FileHelper readData = new FileHelper("data1.txt");
 	    
+	    /**
+	     * Second: put the data into a Map-Function
+	     */
 	    LinearMapFunction aLinearFunc = new LinearMapFunction(readData, "");
+	    
+	    /**
+	     * Third: Use a optimization method to train this Map-Function
+	     * and get the Theta of Map-Function
+	     */
+	    
+	    /**
+	     * Fourth: Use this trained model to predict a test data set.
+	     */
 	}
 
 }
