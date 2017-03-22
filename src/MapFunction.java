@@ -15,6 +15,8 @@ public abstract class MapFunction {
     int degree = 0;
     double[][] xData;
     int[] yData;
+    double[] theta;
+    int thetaLen = 0;
     
     public MapFunction(FileHelper inFhData, String strXselct, int degree) {
         assert(degree > 0);
@@ -44,11 +46,24 @@ public abstract class MapFunction {
             }
             yData[i] = (int) inFhData.data.get(i)[inFhData.columNum-1];
         }
+        
+        genTheta();
     }
     
     /**
      * This method will implements in linear and nonlinear map-functions
      * Input theta and Xi, calculate the dot-product.
+     * @param xIdx: use which xi to dot-product with theta
      */
-    abstract double thetaTx();
+    abstract double thetaTx(int xIdx);
+    
+    /**
+     * Generate the theta array, and initial the value to 0
+     */
+    private void genTheta() {
+        for(int i = 0; i <= degree; i++){
+            thetaLen += MyMathApi.Combi(xNum+i-1, xNum-1);
+        }
+        theta = new double[thetaLen];
+    }
 }

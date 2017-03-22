@@ -17,9 +17,15 @@ public class LinearMapFunction extends MapFunction{
     }
 
     @Override
-    double thetaTx() {
-        // TODO Auto-generated method stub
-        return 0;
+    double thetaTx(int xIdx) {
+        
+        double result = theta[0];
+        
+        //in linear thetaLen = xNum+1
+        for(int i = 1; i < thetaLen; i++) {
+            result += theta[i] * xData[xIdx][xFeaIdx[i-1]];
+        }
+        return result;
     }
 
 }
