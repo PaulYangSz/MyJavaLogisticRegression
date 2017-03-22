@@ -32,4 +32,12 @@ public final class MyMathApi {
     static double sigmoid(double tTx) {
         return 1.0 / (1 + Math.exp(-tTx));
     }
+    
+    static int sumInt(int[] intArry) {
+        int result = 0;
+        for(int i : intArry) {
+            result += i;
+        }
+        return result;
+    }
 }

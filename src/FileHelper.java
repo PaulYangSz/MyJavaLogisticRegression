@@ -37,7 +37,13 @@ public class FileHelper {
 	            for(int i=0; i < columNum; i++) {
 	                oneLineArry[i] = Double.parseDouble(item[i]);
 	            }
-                System.out.println(oneLineArry);
+
+                System.out.print(rowNum+1 + "\t");
+	            for(int i = 0; i < columNum; i++) {
+	                System.out.print(oneLineArry[i]+"\t");
+	            }
+	            System.out.println();
+	            
                 data.add(oneLineArry);
 	            rowNum++;
 	        } 

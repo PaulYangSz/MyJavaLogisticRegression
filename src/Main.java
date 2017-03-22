@@ -18,7 +18,7 @@ public class Main {
 		/** 
 		 * Fist: save the data read from a file.
 		 */
-	    FileHelper readData = new FileHelper("data1.txt");
+	    FileHelper readData = new FileHelper("./data/HxyLinearData1.txt");
 	    
 	    /**
 	     * Second: put the data into a Map-Function

@@ -51,6 +51,13 @@ public abstract class MapFunction {
         }
         
         genTheta();
+        for(int d = 0; d <= degree; d++)
+        {
+            int[] xPweV = new int[xNum];
+            genXjOfTheta(xPweV, d, 0); // G2J !!!!!!!
+        }
+        assert(facList.size() == thetaLen) : "size="+facList.size() + "len="+thetaLen;
+        System.out.println(facList);
     }
     
     /**
@@ -65,35 +72,46 @@ public abstract class MapFunction {
      */
     private void genTheta() {
         for(int i = 0; i <= degree; i++){
+            /**
+             * numI same Balls put in numN diff Boxes = C(numI+numN-1, numN-1)
+             */
             thetaLen += MyMathApi.Combi(xNum+i-1, xNum-1);
         }
-        theta = new double[thetaLen];
+        theta = new double[thetaLen]; //Get initial theta[]
     }
     
     /**
      * This method is to generate the Theta_j's x_j factor
      */
-    private void genXjOfTheta() {
-        for(int i = 0; i <= degree; i++){
-            thetaLen += MyMathApi.Combi(xNum+i-1, xNum-1);
-        }
-        theta = new double[thetaLen]; //Get initial theta[]
-        
+    private void genXjOfTheta(int[] xiPwerV, int curDegree, int curXIdx) {
         //Generate the theta[]'s factor list.
-        int[] xiPwerV = new int[xNum];
-        for(int d = 0; d <= degree; d++)
-        {
-            for(int i = 0; i < xNum; i++)
-            {
-                facList.add(new XjFatorOfTheta());
+        assert(MyMathApi.sumInt(xiPwerV) <= curDegree);
+        
+        if(MyMathApi.sumInt(xiPwerV) == curDegree){
+            facList.add(new XjFatorOfTheta(xiPwerV));
+            return;
+        } else if(curXIdx == xNum) {
+            return;
+        }
+        else {
+            for(int d = curDegree - MyMathApi.sumInt(xiPwerV); d >= 0; d--) {
+                xiPwerV[curXIdx] = d; //traversal the x[i]'s power
+                if(curXIdx < xNum) {
+                    genXjOfTheta(xiPwerV, curDegree, curXIdx+1);
+                }
             }
         }
     }
     
+    /**
+     * 
+     * @author Administrator
+     * This class record Theta_j's factor, and can provide calculate the value by the given x_i 
+     */
     class XjFatorOfTheta {
         int[] xVecPwer;
         
-        XjFatorOfTheta(int[] xiPwerV) {
+        public XjFatorOfTheta(int[] xiPwerV) {
             xVecPwer = new int[xNum];
             for(int i = 0; i < xNum; i++){
                 xVecPwer[i] = xiPwerV[i];
@@ -106,6 +124,17 @@ public abstract class MapFunction {
                 result *= Math.pow(xData[idx][xFeaIdx[i]], xVecPwer[i]);
             }
             return result;
+        }
+        
+        public String toString() {
+            StringBuffer strB = new StringBuffer("(");
+            for(int i = 0; i < xNum - 1; i++) {
+                strB.append(xVecPwer[i]+ ", ");
+            }
+            strB.append(xVecPwer[xNum - 1]);
+            strB.append(")");
+            
+            return strB.toString();
         }
     }
 }
