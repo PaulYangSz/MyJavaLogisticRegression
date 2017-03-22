@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * This class provide a map function model which can be extended to linear or nonlinear.
  */
@@ -10,13 +12,14 @@
  * Means have training data and function but need theta[]
  */
 public abstract class MapFunction {
-    int xNum = 0;
-    int[] xFeaIdx;
-    int degree = 0;
-    double[][] xData;
-    int[] yData;
-    double[] theta;
-    int thetaLen = 0;
+    int xNum = 0; //number of x which selected be feature.
+    int[] xFeaIdx; //feature x's index array
+    int degree = 0; //max power of x, 1 means linear
+    double[][] xData; //All input X data
+    int[] yData; //label value of x_i
+    double[] theta; //coefficient of function factors
+    int thetaLen = 0; //number of function factors
+    ArrayList<XjFatorOfTheta> facList = new ArrayList<XjFatorOfTheta>(); //factors
     
     public MapFunction(FileHelper inFhData, String strXselct, int degree) {
         assert(degree > 0);
@@ -65,5 +68,44 @@ public abstract class MapFunction {
             thetaLen += MyMathApi.Combi(xNum+i-1, xNum-1);
         }
         theta = new double[thetaLen];
+    }
+    
+    /**
+     * This method is to generate the Theta_j's x_j factor
+     */
+    private void genXjOfTheta() {
+        for(int i = 0; i <= degree; i++){
+            thetaLen += MyMathApi.Combi(xNum+i-1, xNum-1);
+        }
+        theta = new double[thetaLen]; //Get initial theta[]
+        
+        //Generate the theta[]'s factor list.
+        int[] xiPwerV = new int[xNum];
+        for(int d = 0; d <= degree; d++)
+        {
+            for(int i = 0; i < xNum; i++)
+            {
+                facList.add(new XjFatorOfTheta());
+            }
+        }
+    }
+    
+    class XjFatorOfTheta {
+        int[] xVecPwer;
+        
+        XjFatorOfTheta(int[] xiPwerV) {
+            xVecPwer = new int[xNum];
+            for(int i = 0; i < xNum; i++){
+                xVecPwer[i] = xiPwerV[i];
+            }
+        }
+        
+        public double calcXj(int idx) {
+            double result = 1.0;
+            for(int i=0; i < xNum; i++) {
+                result *= Math.pow(xData[idx][xFeaIdx[i]], xVecPwer[i]);
+            }
+            return result;
+        }
     }
 }
