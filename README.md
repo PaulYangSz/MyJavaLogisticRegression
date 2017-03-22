@@ -1,2 +1,2 @@
 # MyJavaLogisticRegression
-Learn Logistic Regression and implement by Java
+Learn Logistic Regression and implemented by Java
