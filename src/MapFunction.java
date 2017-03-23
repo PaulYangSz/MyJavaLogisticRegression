@@ -64,6 +64,7 @@ public abstract class MapFunction {
      * This method will implements in linear and nonlinear map-functions
      * Input theta and Xi, calculate the dot-product.
      * @param xIdx: use which xi to dot-product with theta
+     * But now needn't override....
      */
     abstract double thetaTx(int xIdx);
     
