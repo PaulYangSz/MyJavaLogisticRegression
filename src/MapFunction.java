@@ -62,11 +62,22 @@ public abstract class MapFunction {
     
     /**
      * This method will implements in linear and nonlinear map-functions
-     * Input theta and Xi, calculate the dot-product.
+     * Input Xi, calculate the x[Xi] and Theta[]'s dot-product.
      * @param xIdx: use which xi to dot-product with theta
      * But now needn't override....
      */
     abstract double thetaTx(int xIdx);
+    
+    double thetaTx(double[] testData){
+        
+        double result = 0;
+        
+        //in linear thetaLen = xNum+1
+        for(int i = 0; i < thetaLen; i++) {
+            result += theta[i] * facList.get(i).calcXj(testData);
+        }
+        return result;
+    }
     
     /**
      * Generate the theta array, and initial the value to 0
@@ -119,10 +130,28 @@ public abstract class MapFunction {
             }
         }
         
+        /**
+         * Calculate the Theta[j]'s factor(X[i])
+         * @param idx = i
+         * @return value of Theta_j's factor(X[i])
+         */
         public double calcXj(int idx) {
             double result = 1.0;
             for(int i=0; i < xNum; i++) {
                 result *= Math.pow(xData[idx][xFeaIdx[i]], xVecPwer[i]);
+            }
+            return result;
+        }
+        
+        /**
+         * Calculate the Theta[j]'s factor(testData[])
+         * @param testData = testData[]
+         * @return value of Theta_j's factor(testData[])
+         */
+        public double calcXj(double[] testData) {
+            double result = 1.0;
+            for(int i=0; i < xNum; i++) {
+                result *= Math.pow(testData[xFeaIdx[i]], xVecPwer[i]);
             }
             return result;
         }

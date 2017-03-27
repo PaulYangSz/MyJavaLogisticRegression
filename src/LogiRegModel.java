@@ -27,4 +27,13 @@ public class LogiRegModel {
     public void startOpti(double alpha, int iteration) {
         optiM.doOpti(mapF, alpha, iteration);
     }
+    
+    public double predictProb(double[] testIn) {
+        return MyMathApi.sigmoid(mapF.thetaTx(testIn));
+    }
+    
+
+    public int predictClass(double[] testIn) {
+        return (MyMathApi.sigmoid(mapF.thetaTx(testIn)) > 0.5) ? 1 : 0;
+    }
 }
