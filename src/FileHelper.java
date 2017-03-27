@@ -47,6 +47,7 @@ public class FileHelper {
                 data.add(oneLineArry);
 	            rowNum++;
 	        } 
+	        fis.close();
 	    } catch (Exception e) {
 	        e.printStackTrace();
 	    }
