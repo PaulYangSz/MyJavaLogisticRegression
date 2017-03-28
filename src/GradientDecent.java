@@ -24,7 +24,24 @@ public class GradientDecent extends OptiMethod{
         for(int iter = 0; iter < iteration; iter++) {
             
             if(DebugConfig.RECORD_OPTI_STEP) {
-                if(iter % (iteration/10) == 0) System.out.printf("doing %dth optimizing...\n", iter);
+                if(iter % (iteration/10) == 0) {
+                    System.out.printf("doing %dth optimizing...\n", iter);
+                    /*
+                    double cost = 0;
+                    double hypothesis = 0;
+                    for(int i = 0; i < mapF.yData.length; i++) {
+                        hypothesis = MyMathApi.sigmoid(mapF.thetaTx(i));
+                        if(mapF.yData[i] == 1) {
+                            cost += Math.log(hypothesis);
+                        }
+                        else {
+                            cost += Math.log(1 - hypothesis);
+                        }
+                    }
+                    
+                    System.out.println("cost = " + ( -(cost/mapF.yData.length) ) );
+                    */
+                }
             }
             //GD the theta_j
             for(int j = 0; j < mapF.thetaLen; j++) {
@@ -40,7 +57,24 @@ public class GradientDecent extends OptiMethod{
             }
             
             if(DebugConfig.RECORD_OPTI_STEP) {
-                if(iter % (iteration/10) == 0) System.out.printf("done %dth optimizing\n", iter);
+                if(iter % (iteration/10) == 0) {
+                    System.out.printf("done %dth optimizing\n", iter);
+                    /*
+                    double cost = 0;
+                    double hypothesis = 0;
+                    for(int i = 0; i < mapF.yData.length; i++) {
+                        hypothesis = MyMathApi.sigmoid(mapF.thetaTx(i));
+                        if(mapF.yData[i] == 1) {
+                            cost += Math.log(hypothesis);
+                        }
+                        else {
+                            cost += Math.log(1 - hypothesis);
+                        }
+                    }
+                    
+                    System.out.println("cost = " + ( -(cost/mapF.yData.length) ) );
+                    */
+                }
             }
         }
     }

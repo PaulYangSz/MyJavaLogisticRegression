@@ -25,7 +25,9 @@ public class LogiRegModel {
      * @param iteration: times to calculate
      */
     public void startOpti(double alpha, int iteration) {
+        System.out.println("Before optimization cost is " + this.costValue());
         optiM.doOpti(mapF, alpha, iteration);
+        System.out.println("After optimization cost is " + this.costValue());
     }
     
     public double predictProb(double[] testIn) {
@@ -35,5 +37,21 @@ public class LogiRegModel {
 
     public int predictClass(double[] testIn) {
         return (MyMathApi.sigmoid(mapF.thetaTx(testIn)) > 0.5) ? 1 : 0;
+    }
+    
+    public double costValue() {
+        double cost = 0;
+        double hypothesis = 0;
+        for(int i = 0; i < mapF.yData.length; i++) {
+            hypothesis = MyMathApi.sigmoid(mapF.thetaTx(i));
+            if(mapF.yData[i] == 1) {
+                cost += Math.log(hypothesis);
+            }
+            else {
+                cost += Math.log(1 - hypothesis);
+            }
+        }
+        
+        return -(cost/mapF.yData.length);
     }
 }
