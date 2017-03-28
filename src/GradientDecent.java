@@ -23,6 +23,9 @@ public class GradientDecent extends OptiMethod{
         //Total calculate iteration times
         for(int iter = 0; iter < iteration; iter++) {
             
+            if(DebugConfig.RECORD_OPTI_STEP) {
+                if(iter % (iteration/10) == 0) System.out.printf("doing %dth optimizing...\n", iter);
+            }
             //GD the theta_j
             for(int j = 0; j < mapF.thetaLen; j++) {
                 double tmpSum = 0;
@@ -34,6 +37,10 @@ public class GradientDecent extends OptiMethod{
                     tmpSum += error * x_j;
                 }
                 mapF.theta[j] -= alpha * tmpSum;
+            }
+            
+            if(DebugConfig.RECORD_OPTI_STEP) {
+                if(iter % (iteration/10) == 0) System.out.printf("done %dth optimizing\n", iter);
             }
         }
     }
