@@ -31,8 +31,8 @@ public class Main {
 	     */
 	    GradientDecent useGdOpti = new GradientDecent();
 	    LogiRegModel   linearGdModel = new LogiRegModel(aLinearFunc, useGdOpti);
-	    linearGdModel.startOpti(0.001, 50000);
-	    System.out.printf("After (alpha=%f,inter=%d)optimization, Theta[%d]:\n", 0.001,500000,linearGdModel.mapF.theta.length);
+	    linearGdModel.startOpti(0.001, 100000);
+	    System.out.printf("After (alpha=%f,inter=%d)optimization, Theta[%d]:\n", 0.001,100000,linearGdModel.mapF.theta.length);
 	    for(int j = 0; j < linearGdModel.mapF.theta.length; j++) {
 	        System.out.println(linearGdModel.mapF.theta[j]);
 	    }

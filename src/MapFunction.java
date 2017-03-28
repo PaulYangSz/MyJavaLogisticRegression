@@ -57,7 +57,7 @@ public abstract class MapFunction {
             genXjOfTheta(xPweV, d, 0); // G2J !!!!!!!
         }
         assert(facList.size() == thetaLen) : "size="+facList.size() + "len="+thetaLen;
-        System.out.println(facList);
+        if(DebugConfig.PRINT_THETA_INFO) System.out.println("Theta's factors: " + facList);
     }
     
     /**
