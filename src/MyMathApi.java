@@ -9,16 +9,16 @@
  */
 public final class MyMathApi {
     
-    static int Combi(int from, int sub) {
+    static long Combi(int from, int sub) {
         assert(from >= 0 && sub >= 0);
         assert(sub <= from);
         
-        int molecule = 1;
-        int denominator = 1;
+        long molecule = 1;
+        long denominator = 1;
         if(sub == 0 || from == 0){
             return 1;
         }
-        else {
+        else if(sub <= from/2){
             for(int i=0; i < sub; i++) {
                 molecule *= from - i;
             }
@@ -26,6 +26,17 @@ public final class MyMathApi {
                 denominator *= i;
             }
             return molecule/denominator;
+        }
+        else { //Optimization the calculate process
+            sub = from - sub;
+            for(int i=0; i < sub; i++) {
+                molecule *= from - i;
+            }
+            for(int i=sub; i > 0; i--) {
+                denominator *= i;
+            }
+            return molecule/denominator;
+            
         }
     }
     
