@@ -1,96 +1,178 @@
-# -*- coding: cp936 -*-
-import pandas as pd #Êı¾İ·ÖÎö
-import numpy as np #¿ÆÑ§¼ÆËã
+# è¿™ä¸ªæ˜¯ä»HanXiaoyangçš„Titanic.ipynbä¸­æå–å‡ºçš„æ•°æ®é¢„å¤„ç†æ–¹æ³•,ä¸ç„¶ç”¨Javaå†™å¤ªè´¹åŠ²äº†ã€‚
+
+import pandas as pd #æ•°æ®åˆ†æ
+import numpy as np #ç§‘å­¦è®¡ç®—
 from pandas import Series,DataFrame
 
 data_train = pd.read_csv("Train.csv")
-print data_train.columns
+
+#Show first line contents.
+data_train.columns
+
+#Show every fields's count.
 data_train.info()
-print data_train.describe()
+
+#Show mean mix max and so on...
+data_train.describe()
 
 
+#Show a plot
 import matplotlib.pyplot as plt
 from matplotlib.font_manager import FontProperties
-plt.rcParams['font.sans-serif']=['SimHei'] #ÓÃÀ´Õı³£ÏÔÊ¾ÖĞÎÄ±êÇ©
-plt.rcParams['axes.unicode_minus']=False #ÓÃÀ´Õı³£ÏÔÊ¾¸ººÅ
+plt.rcParams['font.sans-serif']=['SimHei'] #ç”¨æ¥æ­£å¸¸æ˜¾ç¤ºä¸­æ–‡æ ‡ç­¾
+plt.rcParams['axes.unicode_minus']=False #ç”¨æ¥æ­£å¸¸æ˜¾ç¤ºè´Ÿå·
 fig = plt.figure()
-fig.set(alpha=0.2)  # Éè¶¨Í¼±íÑÕÉ«alpha²ÎÊı
+fig.set(alpha=0.2)  # è®¾å®šå›¾è¡¨é¢œè‰²alphaå‚æ•°
 
-plt.subplot2grid((2,3),(0,0))             # ÔÚÒ»ÕÅ´óÍ¼Àï·ÖÁĞ¼¸¸öĞ¡Í¼
+plt.subplot2grid((2,3),(0,0))             # åœ¨ä¸€å¼ å¤§å›¾é‡Œåˆ†åˆ—å‡ ä¸ªå°å›¾
 data_train.Survived.value_counts().plot(kind='bar')# plots a bar graph of those who surived vs those who did not. 
-plt.title(u"»ñ¾ÈÇé¿ö (1Îª»ñ¾È)") # puts a title on our graph
-plt.ylabel(u"ÈËÊı")  
+plt.title(u"è·æ•‘æƒ…å†µ (1ä¸ºè·æ•‘)") # puts a title on our graph
+plt.ylabel(u"äººæ•°")  
 
 plt.subplot2grid((2,3),(0,1))
 data_train.Pclass.value_counts().plot(kind="bar")
-plt.ylabel(u"ÈËÊı")
-plt.title(u"³Ë¿ÍµÈ¼¶·Ö²¼")
+plt.ylabel(u"äººæ•°")
+plt.title(u"ä¹˜å®¢ç­‰çº§åˆ†å¸ƒ")
 
 plt.subplot2grid((2,3),(0,2))
 plt.scatter(data_train.Survived, data_train.Age)
-plt.ylabel(u"ÄêÁä")                         # sets the y axis lable
+plt.ylabel(u"å¹´é¾„")                         # sets the y axis lable
 plt.grid(b=True, which='major', axis='y') # formats the grid line style of our graphs
-plt.title(u"°´ÄêÁä¿´»ñ¾È·Ö²¼ (1Îª»ñ¾È)")
+plt.title(u"æŒ‰å¹´é¾„çœ‹è·æ•‘åˆ†å¸ƒ (1ä¸ºè·æ•‘)")
 
 
 plt.subplot2grid((2,3),(1,0), colspan=2)
 data_train.Age[data_train.Pclass == 1].plot(kind='kde')   # plots a kernel desnsity estimate of the subset of the 1st class passanges's age
 data_train.Age[data_train.Pclass == 2].plot(kind='kde')
 data_train.Age[data_train.Pclass == 3].plot(kind='kde')
-plt.xlabel(u"ÄêÁä")# plots an axis lable
-plt.ylabel(u"ÃÜ¶È") 
-plt.title(u"¸÷µÈ¼¶µÄ³Ë¿ÍÄêÁä·Ö²¼")
-plt.legend((u'Í·µÈ²Õ', u'2µÈ²Õ',u'3µÈ²Õ'),loc='best') # sets our legend for our graph.
+plt.xlabel(u"å¹´é¾„")# plots an axis lable
+plt.ylabel(u"å¯†åº¦") 
+plt.title(u"å„ç­‰çº§çš„ä¹˜å®¢å¹´é¾„åˆ†å¸ƒ")
+plt.legend((u'å¤´ç­‰èˆ±', u'2ç­‰èˆ±',u'3ç­‰èˆ±'),loc='best') # sets our legend for our graph.
 
 
 plt.subplot2grid((2,3),(1,2))
 data_train.Embarked.value_counts().plot(kind='bar')
-plt.title(u"¸÷µÇ´¬¿Ú°¶ÉÏ´¬ÈËÊı")
-plt.ylabel(u"ÈËÊı")  
+plt.title(u"å„ç™»èˆ¹å£å²¸ä¸Šèˆ¹äººæ•°")
+plt.ylabel(u"äººæ•°")  
 plt.show()
 
-#ticketÊÇ´¬Æ±±àºÅ£¬Ó¦¸ÃÊÇuniqueµÄ£¬ºÍ×îºóµÄ½á¹ûÃ»ÓĞÌ«´óµÄ¹ØÏµ£¬²»ÄÉÈë¿¼ÂÇµÄÌØÕ÷·¶³ë
-#cabinÖ»ÓĞ204¸ö³Ë¿ÍÓĞÖµ£¬ÎÒÃÇÏÈ¿´¿´ËüµÄÒ»¸ö·Ö²¼
-print data_train.Cabin.value_counts()
 
+
+
+
+#æˆ‘ä»¬è¿™é‡Œç”¨scikit-learnä¸­çš„RandomForestæ¥æ‹Ÿåˆä¸€ä¸‹ç¼ºå¤±çš„å¹´é¾„æ•°æ®
 from sklearn.ensemble import RandomForestRegressor
-
-
-### Ê¹ÓÃ RandomForestClassifier Ìî²¹È±Ê§µÄÄêÁäÊôĞÔ
+ 
+### ä½¿ç”¨ RandomForestClassifier å¡«è¡¥ç¼ºå¤±çš„å¹´é¾„å±æ€§
 def set_missing_ages(df):
-    # °ÑÒÑÓĞµÄÊıÖµĞÍÌØÕ÷È¡³öÀ´¶ª½øRandom Forest RegressorÖĞ
-    age_df = df[['Age', 'Fare', 'Parch', 'SibSp', 'Pclass']]
+    
+    # æŠŠå·²æœ‰çš„æ•°å€¼å‹ç‰¹å¾å–å‡ºæ¥ä¸¢è¿›Random Forest Regressorä¸­
+    age_df = df[['Age','Fare', 'Parch', 'SibSp', 'Pclass']]
 
-    # ³Ë¿Í·Ö³ÉÒÑÖªÄêÁäºÍÎ´ÖªÄêÁäÁ½²¿·Ö
+    # ä¹˜å®¢åˆ†æˆå·²çŸ¥å¹´é¾„å’ŒæœªçŸ¥å¹´é¾„ä¸¤éƒ¨åˆ†
     known_age = age_df[age_df.Age.notnull()].as_matrix()
     unknown_age = age_df[age_df.Age.isnull()].as_matrix()
 
-    # y¼´Ä¿±êÄêÁä
+    # yå³ç›®æ ‡å¹´é¾„
     y = known_age[:, 0]
 
-    # X¼´ÌØÕ÷ÊôĞÔÖµ
+    # Xå³ç‰¹å¾å±æ€§å€¼
     X = known_age[:, 1:]
 
-    # fitµ½RandomForestRegressorÖ®ÖĞ
+    # fitåˆ°RandomForestRegressorä¹‹ä¸­
     rfr = RandomForestRegressor(random_state=0, n_estimators=2000, n_jobs=-1)
     rfr.fit(X, y)
-
-    # ÓÃµÃµ½µÄÄ£ĞÍ½øĞĞÎ´ÖªÄêÁä½á¹ûÔ¤²â
+    
+    # ç”¨å¾—åˆ°çš„æ¨¡å‹è¿›è¡ŒæœªçŸ¥å¹´é¾„ç»“æœé¢„æµ‹
     predictedAges = rfr.predict(unknown_age[:, 1::])
-
-    # ÓÃµÃµ½µÄÔ¤²â½á¹ûÌî²¹Ô­È±Ê§Êı¾İ
-    df.loc[(df.Age.isnull()), 'Age'] = predictedAges
-
+    
+    # ç”¨å¾—åˆ°çš„é¢„æµ‹ç»“æœå¡«è¡¥åŸç¼ºå¤±æ•°æ®
+    df.loc[ (df.Age.isnull()), 'Age' ] = predictedAges 
+    
     return df, rfr
 
-
 def set_Cabin_type(df):
-    df.loc[(df.Cabin.notnull()), 'Cabin'] = "Yes"
-    df.loc[(df.Cabin.isnull()), 'Cabin'] = "No"
+    df.loc[ (df.Cabin.notnull()), 'Cabin' ] = "Yes"
+    df.loc[ (df.Cabin.isnull()), 'Cabin' ] = "No"
     return df
-
 
 data_train, rfr = set_missing_ages(data_train)
 data_train = set_Cabin_type(data_train)
-print data_train
-data_train.info()
+data_train
+
+
+
+
+
+# å› ä¸ºé€»è¾‘å›å½’å»ºæ¨¡æ—¶ï¼Œéœ€è¦è¾“å…¥çš„ç‰¹å¾éƒ½æ˜¯æ•°å€¼å‹ç‰¹å¾
+# æˆ‘ä»¬å…ˆå¯¹ç±»ç›®å‹çš„ç‰¹å¾ç¦»æ•£/å› å­åŒ–
+# ä»¥Cabinä¸ºä¾‹ï¼ŒåŸæœ¬ä¸€ä¸ªå±æ€§ç»´åº¦ï¼Œå› ä¸ºå…¶å–å€¼å¯ä»¥æ˜¯['yes','no']ï¼Œè€Œå°†å…¶å¹³å±•å¼€ä¸º'Cabin_yes','Cabin_no'ä¸¤ä¸ªå±æ€§
+# åŸæœ¬Cabinå–å€¼ä¸ºyesçš„ï¼Œåœ¨æ­¤å¤„çš„'Cabin_yes'ä¸‹å–å€¼ä¸º1ï¼Œåœ¨'Cabin_no'ä¸‹å–å€¼ä¸º0
+# åŸæœ¬Cabinå–å€¼ä¸ºnoçš„ï¼Œåœ¨æ­¤å¤„çš„'Cabin_yes'ä¸‹å–å€¼ä¸º0ï¼Œåœ¨'Cabin_no'ä¸‹å–å€¼ä¸º1
+# æˆ‘ä»¬ä½¿ç”¨pandasçš„get_dummiesæ¥å®Œæˆè¿™ä¸ªå·¥ä½œï¼Œå¹¶æ‹¼æ¥åœ¨åŸæ¥çš„data_trainä¹‹ä¸Šï¼Œå¦‚ä¸‹æ‰€ç¤º
+dummies_Cabin = pd.get_dummies(data_train['Cabin'], prefix= 'Cabin')
+
+dummies_Embarked = pd.get_dummies(data_train['Embarked'], prefix= 'Embarked')
+
+dummies_Sex = pd.get_dummies(data_train['Sex'], prefix= 'Sex')
+
+dummies_Pclass = pd.get_dummies(data_train['Pclass'], prefix= 'Pclass')
+
+df = pd.concat([data_train, dummies_Cabin, dummies_Embarked, dummies_Sex, dummies_Pclass], axis=1)
+df.drop(['Pclass', 'Name', 'Sex', 'Ticket', 'Cabin', 'Embarked'], axis=1, inplace=True)
+df
+
+
+
+
+# æ¥ä¸‹æ¥æˆ‘ä»¬è¦æ¥ç€åšä¸€äº›æ•°æ®é¢„å¤„ç†çš„å·¥ä½œï¼Œæ¯”å¦‚scalingï¼Œå°†ä¸€äº›å˜åŒ–å¹…åº¦è¾ƒå¤§çš„ç‰¹å¾åŒ–åˆ°[-1,1]ä¹‹å†…
+# è¿™æ ·å¯ä»¥åŠ é€Ÿlogistic regressionçš„æ”¶æ•›
+import sklearn.preprocessing as preprocessing
+scaler = preprocessing.StandardScaler()
+age_scale_param = scaler.fit(df['Age'])
+df['Age_scaled'] = scaler.fit_transform(df['Age'], age_scale_param)
+fare_scale_param = scaler.fit(df['Fare'])
+df['Fare_scaled'] = scaler.fit_transform(df['Fare'], fare_scale_param)
+df
+
+
+
+# æˆ‘ä»¬æŠŠéœ€è¦çš„featureå­—æ®µå–å‡ºæ¥ç”Ÿæˆcsvæ ¼å¼
+train_df = df.filter(regex='Survived|Age_.*|SibSp|Parch|Fare_.*|Cabin_.*|Embarked_.*|Sex_.*|Pclass_.*')
+cols = train_df.columns.tolist()
+cols = cols[1:] + cols[:1]
+cols
+train_df = train_df[cols]
+train_df.to_csv('gen_train_data.csv', index=False)
+
+
+
+
+#Begin to process test data
+data_test = pd.read_csv("test.csv")
+data_test.loc[ (data_test.Fare.isnull()), 'Fare' ] = 0
+# æ¥ç€æˆ‘ä»¬å¯¹test_dataåšå’Œtrain_dataä¸­ä¸€è‡´çš„ç‰¹å¾å˜æ¢
+# é¦–å…ˆç”¨åŒæ ·çš„RandomForestRegressoræ¨¡å‹å¡«ä¸Šä¸¢å¤±çš„å¹´é¾„
+tmp_df = data_test[['Age','Fare', 'Parch', 'SibSp', 'Pclass']]
+null_age = tmp_df[data_test.Age.isnull()].as_matrix()
+# æ ¹æ®ç‰¹å¾å±æ€§Xé¢„æµ‹å¹´é¾„å¹¶è¡¥ä¸Š
+X = null_age[:, 1:]
+predictedAges = rfr.predict(X)
+data_test.loc[ (data_test.Age.isnull()), 'Age' ] = predictedAges
+
+data_test = set_Cabin_type(data_test)
+dummies_Cabin = pd.get_dummies(data_test['Cabin'], prefix= 'Cabin')
+dummies_Embarked = pd.get_dummies(data_test['Embarked'], prefix= 'Embarked')
+dummies_Sex = pd.get_dummies(data_test['Sex'], prefix= 'Sex')
+dummies_Pclass = pd.get_dummies(data_test['Pclass'], prefix= 'Pclass')
+
+
+df_test = pd.concat([data_test, dummies_Cabin, dummies_Embarked, dummies_Sex, dummies_Pclass], axis=1)
+df_test.drop(['Pclass', 'Name', 'Sex', 'Ticket', 'Cabin', 'Embarked'], axis=1, inplace=True)
+df_test['Age_scaled'] = scaler.fit_transform(df_test['Age'], age_scale_param)
+df_test['Fare_scaled'] = scaler.fit_transform(df_test['Fare'], fare_scale_param)
+df_test
+
+test = df_test.filter(regex='Age_.*|SibSp|Parch|Fare_.*|Cabin_.*|Embarked_.*|Sex_.*|Pclass_.*')
+test.to_csv('gen_test_data.csv', index=False)
