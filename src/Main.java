@@ -6,7 +6,7 @@
 /**
  * @author Paul.Yang
  * @Email  shohokuooo@gmail.com
- * @Github https://github.com/PaulYangSz
+ * @Github https://github.com/PaulYangSz/MyJavaLogisticRegression
  *
  */
 public class Main {
@@ -63,7 +63,7 @@ public class Main {
 	    System.out.println("============");
 	    
 	    /**
-	     * Fourth: Use this trained model to predict a test data set.
+	     * Fourth: Use this trained model to predict original training data set.
 	     */
 	    int sumPrediCorr = 0;
 	    for(int i = 0; i < commGdModel.mapF.xData.length; i++) {
