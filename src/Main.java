@@ -67,12 +67,12 @@ public class Main {
 	     */
 	    int sumPrediCorr = 0;
 	    for(int i = 0; i < commGdModel.mapF.xData.length; i++) {
-	        if(commGdModel.predictClass(commGdModel.mapF.xData[i]) == commGdModel.mapF.yData[i]) {
+	        if(commGdModel.predictClassify(commGdModel.mapF.xData[i]) == commGdModel.mapF.yData[i]) {
 	            sumPrediCorr++;
 	        }
 	        else
 	        {
-	            System.out.println("i= "+ i +",Predi = "+commGdModel.predictClass(commGdModel.mapF.xData[i])+ ", Y= "+commGdModel.mapF.yData[i]);
+	            System.out.println("i= "+ i +",Predi = "+commGdModel.predictClassify(commGdModel.mapF.xData[i])+ ", Y= "+commGdModel.mapF.yData[i]);
 	        }
 	    }
 	    double prediRate = (double)sumPrediCorr / commGdModel.mapF.xData.length;

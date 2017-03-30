@@ -60,7 +60,25 @@ public class FileHelper {
 	    readFromFile(fileName);
 	}
 	
-	static void writeToFile(int[] elementID, int[] predict) {
-		
+	/**
+	 * Write result to a csv format file.
+	 * @param firstLine: In Titanic means "PassengerId,Survived"
+	 * @param elementID: first column's value
+	 * @param predict: sencond column's value
+	 * @param fileName: output file name.
+	 */
+	static void writeToFile(String firstLine, int[] elementID, int[] predict, String fileName) {
+		try {
+		    BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
+		    out.write(firstLine);
+		    out.newLine();
+		    for(int i = 0; i < elementID.length; i++) {
+		        out.write(elementID[i] + "," + predict[i]);
+		        out.newLine();
+		    }
+		    out.close();
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
 	}
 }

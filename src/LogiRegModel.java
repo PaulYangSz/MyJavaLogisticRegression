@@ -35,7 +35,8 @@ public class LogiRegModel {
     }
     
 
-    public int predictClass(double[] testIn) {
+    public int predictClassify(double[] testIn) {
+        assert(testIn.length == mapF.xData[0].length) : "In size=" + testIn.length + ", X[].len="+mapF.xData[0].length;
         return (MyMathApi.sigmoid(mapF.thetaTx(testIn)) > 0.5) ? 1 : 0;
     }
     

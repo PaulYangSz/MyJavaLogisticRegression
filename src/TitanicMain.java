@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * This class do the predict about the Titanic Kaggle problem.
  */
@@ -19,6 +22,7 @@ public class TitanicMain {
         LinearMapFunction aLinearFunc = null;
         NonlinearMapFunction aNonlinearFunc = null;
         LogiRegModel   commGdModel = null;
+
         
         /** 
          * Fist: save the data read from a file.
@@ -51,8 +55,8 @@ public class TitanicMain {
         else{
             commGdModel = new LogiRegModel(aNonlinearFunc, useGdOpti);
         }
-        int opriIterTimes = 1000;
-        double alpha = 0.001;
+        int opriIterTimes = 2000;
+        double alpha = 0.01;
         System.out.printf("Begin optimizing with alpha=%f, iter_times=%d\n", alpha, opriIterTimes);
         commGdModel.startOpti(alpha, opriIterTimes);
         System.out.printf("After optimization, Theta[%d]:\n", commGdModel.mapF.theta.length);
@@ -66,16 +70,33 @@ public class TitanicMain {
          */
         int sumPrediCorr = 0;
         for(int i = 0; i < commGdModel.mapF.xData.length; i++) {
-            if(commGdModel.predictClass(commGdModel.mapF.xData[i]) == commGdModel.mapF.yData[i]) {
+            if(commGdModel.predictClassify(commGdModel.mapF.xData[i]) == commGdModel.mapF.yData[i]) {
                 sumPrediCorr++;
             }
             else
             {
-                System.out.println("i= "+ i +",Predi = "+commGdModel.predictClass(commGdModel.mapF.xData[i])+ ", Y= "+commGdModel.mapF.yData[i]);
+                System.out.println("i= "+ i +",Predi = "+commGdModel.predictClassify(commGdModel.mapF.xData[i])+ ", Y= "+commGdModel.mapF.yData[i]);
             }
         }
         double prediRate = (double)sumPrediCorr / commGdModel.mapF.xData.length;
-        System.out.println("Finally our model predict correct rate is " + prediRate + ",num = " + sumPrediCorr);
+        System.out.println("Our model predict original training data correct rate is " + prediRate + ",num = " + sumPrediCorr);
+        
+        /**
+         * Fifth: Predict the test data and submit the result to Kaggle.
+         */
+        FileHelper readTestData = null;
+        readTestData = new FileHelper("./data/kaggle/gen_test_data.csv");
+        int[] yResult = new int[readTestData.data.size()];
+        int[] passId = new int[readTestData.data.size()];
+        for(int i = 0; i < readTestData.data.size(); i++) {
+            passId[i] = 892 + i;
+            yResult[i] = commGdModel.predictClassify(readTestData.data.get(i));
+        }
+
+        Date now = new Date();
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy_MM_dd-HH_mm");
+        FileHelper.writeToFile("PassengerId,Survived", passId, yResult, "./data/kaggle/Yang_submit-" + dateformat.format(now) + ".csv");
+        
     }
 
 
