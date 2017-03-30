@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # 这个是从HanXiaoyang的Titanic.ipynb中提取出的数据预处理方法,不然用Java写太费劲了。
 
 import pandas as pd #数据分析
