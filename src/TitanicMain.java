@@ -41,7 +41,7 @@ public class TitanicMain {
             aLinearFunc = new LinearMapFunction(readData, "");
         }
         else {
-            aNonlinearFunc = new NonlinearMapFunction(readData, "", 3);
+            aNonlinearFunc = new NonlinearMapFunction(readData, "", 2);
         }
         
         /**
@@ -56,8 +56,8 @@ public class TitanicMain {
             commGdModel = new LogiRegModel(aNonlinearFunc, useGdOpti);
         }
         int opriIterTimes = 2000;
-        double alpha = 0.001;
-        changeCoeffi(commGdModel.mapF.theta);
+        double alpha = 0.01;
+        //changeCoeffi(commGdModel.mapF.theta);
         System.out.printf("Begin optimizing with alpha=%f, iter_times=%d\n", alpha, opriIterTimes);
         commGdModel.startOpti(alpha, opriIterTimes);
         System.out.printf("After optimization, Theta[%d]:\n", commGdModel.mapF.theta.length);
