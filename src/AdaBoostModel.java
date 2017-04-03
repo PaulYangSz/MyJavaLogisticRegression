@@ -22,28 +22,43 @@ public class AdaBoostModel {
     }
     
     public void startBoost() {
-        
+        System.out.println("start Ada Boost...");
         double[] weights = new double[untrainedBaseLR.mapF.yData.length]; //weight to every x_i
         for(int i = 0; i < untrainedBaseLR.mapF.yData.length; i++) {
             weights[i] = 1.0/untrainedBaseLR.mapF.yData.length;
         }
 
         int opriIterTimes = 100; //maybe only need a weak classifier.
-        double alpha = 0.1; //without w[i] alpha is 0.001, then maybe 0.1 with w[i]
+        double alpha = 1.0; //without w[i] alpha is 0.001, then maybe 1 with w[i]
         for(int mIdx = 0; mIdx < maxBmNum; mIdx++) {
-            double errM; //error rate with w[mIdx]
+            int maxTryTrainBaseNum = 3; //Max-times try to get a base with err < 0.45
+            double errM  = 0.0; //error rate with w[mIdx]
             
             //Get one base classifier with w[mIdx]
             LogiRegModel baseLogiRegModel = new LogiRegModel(untrainedBaseLR);
             baseLogiRegModel.startOpti(alpha, opriIterTimes, weights);
             
             //Calculate the error rate with w[mIdx]
-            errM = baseLogiRegModel.calcErrM(weights);
-            System.out.println(mIdx + "th Base Model's errM = " + errM);
-            assert(errM > 0) : "Unbelievable you just got a 'perfect' model.";
+            for(int i = 1; i < maxTryTrainBaseNum; i++) {
+                errM = baseLogiRegModel.calcErrM(weights);
+                System.out.println(mIdx + "th Base Model's errM = " + errM);
+                if(errM > 0.45) {
+                    System.out.println("Need startOpti again with IterTimes=" + opriIterTimes * (int)Math.pow(2, i));
+                    baseLogiRegModel.startOpti(alpha, opriIterTimes * (int)Math.pow(2, i), weights);
+                }
+                else {
+                    break;
+                }
+                assert(errM > 0) : "Unbelievable you just got a 'perfect' model.";
+            }
+            
+            if(errM > 0.5) {
+                break;
+            }
             
             //Get the model[mIdx]'s coefficient.
             alphaM[mIdx] = 0.5 * Math.log((1-errM) / errM);
+            System.out.println(mIdx + "th Base Model's alphaM = " + alphaM[mIdx]);
             baseModelSet.add(baseLogiRegModel);
             
             // Update the w[mIdx + 1]
@@ -56,15 +71,18 @@ public class AdaBoostModel {
                 
                 weights[i] *= tmpExp;
             }
+            System.out.println(mIdx+1 + "th Weights[]:");
             for(int i = 0; i < untrainedBaseLR.mapF.yData.length; i++) {
                 weights[i] = weights[i]/zM;
+                //System.out.println(weights[i]);
             }
+            System.out.println("~~~Get base model " + mIdx);
         }
         
         realBmNum = baseModelSet.size();
         
         if(DebugConfig.PRINT_ADABOOST_PARA) {
-            System.out.println("Complete the boost:");
+            System.out.println("Complete the boost, with real num = " + realBmNum);
             for(int i = 0; i < realBmNum; i++) {
                 System.out.printf("alpha[%d] = %f\n", i, alphaM[i]);
                 for(int j = 0; j < baseModelSet.get(i).mapF.theta.length; j++) {
