@@ -66,22 +66,23 @@ public abstract class MapFunction {
         
         xFeaNum = origMf.xFeaNum;
         xFeaIdx = new int[xFeaNum];
-        System.arraycopy(xFeaIdx, 0, origMf.xFeaIdx, 0, xFeaNum);
+        /**
+         * Do not make a mistake: arraycopy has a reverse src and dest order compared by memcpy!!!
+         */
+        System.arraycopy(origMf.xFeaIdx, 0, xFeaIdx, 0, xFeaNum); //Full of tears.... src ahead, des behind
         
         xData = new double[origMf.xData.length][origMf.xData[0].length];
         yData = new int[origMf.yData.length];
         for(int i=0; i < origMf.yData.length; i++) {
-            for(int j=0; j < origMf.xData[0].length; j++) {
-                xData[i][j] = origMf.xData[i][j];
-            }
-            yData[i] = origMf.yData[i];
+            System.arraycopy(origMf.xData[i], 0, xData[i], 0, origMf.xData[0].length);
         }
+        System.arraycopy(origMf.yData, 0, yData, 0, origMf.yData.length);
         
         thetaLen = origMf.thetaLen;
         theta = new double[thetaLen]; //Get initial theta[]
         facList.addAll(origMf.facList); //Not need different, so not copy.
         assert(facList.size() == thetaLen) : "size="+facList.size() + ", len="+thetaLen;
-        if(DebugConfig.PRINT_THETA_INFO) System.out.println("Theta's factors: " + facList);
+        //if(DebugConfig.PRINT_THETA_INFO) System.out.println("Theta's factors: " + facList);
     }
     
     /**
