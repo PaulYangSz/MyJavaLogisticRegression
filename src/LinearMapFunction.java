@@ -16,6 +16,11 @@ public class LinearMapFunction extends MapFunction{
         super(inFhData, strXselct, 1);
     }
 
+    public LinearMapFunction(MapFunction origMapF) {
+        // TODO Auto-generated constructor stub
+        super(origMapF);
+    }
+
     @Override
     double thetaTx(int xIdx) {
         

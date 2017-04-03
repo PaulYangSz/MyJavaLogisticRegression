@@ -22,7 +22,7 @@ public class TitanicMain {
         LinearMapFunction aLinearFunc = null;
         NonlinearMapFunction aNonlinearFunc = null;
         LogiRegModel   commGdModel = null;
-
+        AdaBoostModel  adaboostModel = null;
         
         /** 
          * Fist: save the data read from a file.
@@ -55,28 +55,47 @@ public class TitanicMain {
         else{
             commGdModel = new LogiRegModel(aNonlinearFunc, useGdOpti);
         }
-        int opriIterTimes = 2000;
-        double alpha = 0.01;
-        //changeCoeffi(commGdModel.mapF.theta);
-        System.out.printf("Begin optimizing with alpha=%f, iter_times=%d\n", alpha, opriIterTimes);
-        commGdModel.startOpti(alpha, opriIterTimes);
-        System.out.printf("After optimization, Theta[%d]:\n", commGdModel.mapF.theta.length);
-        for(int j = 0; j < commGdModel.mapF.theta.length; j++) {
-            System.out.println(commGdModel.mapF.theta[j]);
+        
+        if(DebugConfig.USE_ADABOOST_MODEL) {
+            int maxBaseModelNum = 10;
+            adaboostModel = new AdaBoostModel(maxBaseModelNum, commGdModel);
+            adaboostModel.startBoost();
         }
-        System.out.println("============");
+        else {
+            int opriIterTimes = 1000;
+            double alpha = 0.001;
+            //changeCoeffi(commGdModel.mapF.theta);
+            System.out.printf("Begin optimizing with alpha=%f, iter_times=%d\n", alpha, opriIterTimes);
+            commGdModel.startOpti(alpha, opriIterTimes);
+            System.out.printf("After optimization, Theta[%d]:\n", commGdModel.mapF.theta.length);
+            for(int j = 0; j < commGdModel.mapF.theta.length; j++) {
+                System.out.println(commGdModel.mapF.theta[j]);
+            }
+            System.out.println("============");
+        }
         
         /**
          * Fourth: Use this trained model to predict original training data set.
          */
         int sumPrediCorr = 0;
         for(int i = 0; i < commGdModel.mapF.xData.length; i++) {
-            if(commGdModel.predictClassify(commGdModel.mapF.xData[i]) == commGdModel.mapF.yData[i]) {
-                sumPrediCorr++;
+            if(DebugConfig.USE_ADABOOST_MODEL) {
+                if(adaboostModel.predictClassify(adaboostModel.untrainedBaseLR.mapF.xData[i]) == adaboostModel.untrainedBaseLR.mapF.yData[i]) {
+                    sumPrediCorr++;
+                }
+                else
+                {
+                    System.out.println("i= "+ i +",Predi = "+adaboostModel.predictClassify(adaboostModel.untrainedBaseLR.mapF.xData[i])+ ", Y= "+adaboostModel.untrainedBaseLR.mapF.yData[i]);
+                }
             }
-            else
-            {
-                System.out.println("i= "+ i +",Predi = "+commGdModel.predictClassify(commGdModel.mapF.xData[i])+ ", Y= "+commGdModel.mapF.yData[i]);
+            else {
+                if(commGdModel.predictClassify(commGdModel.mapF.xData[i]) == commGdModel.mapF.yData[i]) {
+                    sumPrediCorr++;
+                }
+                else
+                {
+                    System.out.println("i= "+ i +",Predi = "+commGdModel.predictClassify(commGdModel.mapF.xData[i])+ ", Y= "+commGdModel.mapF.yData[i]);
+                }
             }
         }
         double prediRate = (double)sumPrediCorr / commGdModel.mapF.xData.length;
@@ -91,7 +110,12 @@ public class TitanicMain {
         int[] passId = new int[readTestData.data.size()];
         for(int i = 0; i < readTestData.data.size(); i++) {
             passId[i] = 892 + i;
-            yResult[i] = commGdModel.predictClassify(readTestData.data.get(i));
+            if(DebugConfig.USE_ADABOOST_MODEL) {
+                yResult[i] = adaboostModel.predictClassify(readTestData.data.get(i));
+            }
+            else {
+                yResult[i] = commGdModel.predictClassify(readTestData.data.get(i));
+            }
         }
 
         Date now = new Date();

@@ -16,6 +16,11 @@ public class NonlinearMapFunction extends MapFunction {
         super(inFhData, strXselct, degree);
     }
 
+    public NonlinearMapFunction(MapFunction origMapF) {
+        // TODO Auto-generated constructor stub
+        super(origMapF);
+    }
+
     @Override
     double thetaTx(int xIdx) {
         

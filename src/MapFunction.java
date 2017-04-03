@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * Means have training data and function but need theta[]
  */
 public abstract class MapFunction {
-    int xNum = 0; //number of x which selected be feature.
+    int xFeaNum = 0; //number of x which selected be feature.
     int[] xFeaIdx; //feature x's index array
     int degree = 0; //max power of x, 1 means linear
     double[][] xData; //All input X data
@@ -26,17 +26,17 @@ public abstract class MapFunction {
         this.degree = degree;
         
         if(strXselct.equals("") == true) {
-            xNum = inFhData.columNum - 1;
-            xFeaIdx = new int[xNum];
-            for(int i=0; i< xNum; i++) {
+            xFeaNum = inFhData.columNum - 1;
+            xFeaIdx = new int[xFeaNum];
+            for(int i=0; i< xFeaNum; i++) {
                 xFeaIdx[i] = i;
             }
         }
         else{
             String[] strIdx = strXselct.split(",");
-            xNum = strIdx.length;
-            xFeaIdx = new int[xNum];
-            for(int i=0; i < xNum; i++) {
+            xFeaNum = strIdx.length;
+            xFeaIdx = new int[xFeaNum];
+            for(int i=0; i < xFeaNum; i++) {
                 xFeaIdx[i] = Integer.parseInt(strIdx[i]);
             }
         }
@@ -53,9 +53,33 @@ public abstract class MapFunction {
         genTheta();
         for(int d = 0; d <= degree; d++)
         {
-            int[] xPweV = new int[xNum];
+            int[] xPweV = new int[xFeaNum];
             genXjOfTheta(xPweV, d, 0); // G2J !!!!!!!
         }
+        assert(facList.size() == thetaLen) : "size="+facList.size() + ", len="+thetaLen;
+        if(DebugConfig.PRINT_THETA_INFO) System.out.println("Theta's factors: " + facList);
+    }
+    
+
+    public MapFunction(MapFunction origMf) {
+        degree = origMf.degree;
+        
+        xFeaNum = origMf.xFeaNum;
+        xFeaIdx = new int[xFeaNum];
+        System.arraycopy(xFeaIdx, 0, origMf.xFeaIdx, 0, xFeaNum);
+        
+        xData = new double[origMf.xData.length][origMf.xData[0].length];
+        yData = new int[origMf.yData.length];
+        for(int i=0; i < origMf.yData.length; i++) {
+            for(int j=0; j < origMf.xData[0].length; j++) {
+                xData[i][j] = origMf.xData[i][j];
+            }
+            yData[i] = origMf.yData[i];
+        }
+        
+        thetaLen = origMf.thetaLen;
+        theta = new double[thetaLen]; //Get initial theta[]
+        facList.addAll(origMf.facList); //Not need different, so not copy.
         assert(facList.size() == thetaLen) : "size="+facList.size() + ", len="+thetaLen;
         if(DebugConfig.PRINT_THETA_INFO) System.out.println("Theta's factors: " + facList);
     }
@@ -87,7 +111,7 @@ public abstract class MapFunction {
             /**
              * numI same Balls put in numN diff Boxes = C(numI+numN-1, numN-1)
              */
-            thetaLen += MyMathApi.Combi(xNum+i-1, xNum-1);
+            thetaLen += MyMathApi.Combi(xFeaNum+i-1, xFeaNum-1);
         }
         theta = new double[thetaLen]; //Get initial theta[]
     }
@@ -102,13 +126,13 @@ public abstract class MapFunction {
         if(MyMathApi.sumInt(xiPwerV) == curDegree){
             facList.add(new XjFatorOfTheta(xiPwerV));
             return;
-        } else if(curXIdx == xNum) {
+        } else if(curXIdx == xFeaNum) {
             return;
         }
         else {
             for(int d = curDegree - MyMathApi.sumInt(xiPwerV); d >= 0; d--) {
                 xiPwerV[curXIdx] = d; //traversal the x[i]'s power
-                if(curXIdx < xNum) {
+                if(curXIdx < xFeaNum) {
                     genXjOfTheta(xiPwerV, curDegree, curXIdx+1);
                 }
             }
@@ -124,8 +148,8 @@ public abstract class MapFunction {
         int[] xVecPwer;
         
         public XjFatorOfTheta(int[] xiPwerV) {
-            xVecPwer = new int[xNum];
-            for(int i = 0; i < xNum; i++){
+            xVecPwer = new int[xFeaNum];
+            for(int i = 0; i < xFeaNum; i++){
                 xVecPwer[i] = xiPwerV[i];
             }
         }
@@ -137,7 +161,7 @@ public abstract class MapFunction {
          */
         public double calcXj(int idx) {
             double result = 1.0;
-            for(int i=0; i < xNum; i++) {
+            for(int i=0; i < xFeaNum; i++) {
                 result *= Math.pow(xData[idx][xFeaIdx[i]], xVecPwer[i]);
             }
             return result;
@@ -150,7 +174,7 @@ public abstract class MapFunction {
          */
         public double calcXj(double[] testData) {
             double result = 1.0;
-            for(int i=0; i < xNum; i++) {
+            for(int i=0; i < xFeaNum; i++) {
                 result *= Math.pow(testData[xFeaIdx[i]], xVecPwer[i]);
             }
             return result;
@@ -158,10 +182,10 @@ public abstract class MapFunction {
         
         public String toString() {
             StringBuffer strB = new StringBuffer("(");
-            for(int i = 0; i < xNum - 1; i++) {
+            for(int i = 0; i < xFeaNum - 1; i++) {
                 strB.append(xVecPwer[i]+ ", ");
             }
-            strB.append(xVecPwer[xNum - 1]);
+            strB.append(xVecPwer[xFeaNum - 1]);
             strB.append(")");
             
             return strB.toString();
