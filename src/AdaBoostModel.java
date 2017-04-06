@@ -71,7 +71,7 @@ public class AdaBoostModel {
                 
                 weights[i] *= tmpExp;
             }
-            System.out.println(mIdx+1 + "th Weights[]:");
+            System.out.println(mIdx+1 + "th Weights[] has been updated:");
             for(int i = 0; i < untrainedBaseLR.mapF.yData.length; i++) {
                 weights[i] = weights[i]/zM;
                 //System.out.println(weights[i]);
