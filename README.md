@@ -27,7 +27,7 @@ Learn Logistic Regression and implemented by Java
 #### FilerHelper.java
 这个类是第一个被实现的，目的就是从csv格式的文件中读取数据，保存在自己的ArrayList中。
 #### MapFunction.java
-这个类将FileHelper中的保存数据，转化为自己的X和Y数组中，并根据X的最大幂值degree映射出一维线性或者多维非线性的函数，其中**方法genXjOfTheta(int[] xiPwerV, int curDegree, int curXIdx)**的实现过程最为有意思，虽然函数的有效行只有区区不到10行，但是却花了我一晚上的时间才写出来。这个方法的目的就是根据选取作为特征的X的个数以及degree的值来生成一个全展开的多项式。让Theta[]与这个多项式对应起来。
+这个类将FileHelper中的保存数据，转化为自己的X和Y数组中，并根据X的最大幂值degree映射出一维线性或者多维非线性的函数，其中**方法genXjOfTheta(int[] xiPwerV, int curDegree, int curXIdx)** 的实现过程最为有意思，虽然函数的有效行只有区区不到10行，但是却花了我一晚上的时间才写出来。这个方法的目的就是根据选取作为特征的X的个数以及degree的值来生成一个全展开的多项式。让Theta[]与这个多项式对应起来。
 #### LinearMapFunction.java和NonlinearMapFunction.java 
 这两个类是对MapFunction抽象类的继承，本来是想在这两个各自的子类中完成各自的关键方法，尤其是想分步走先做个线性简单的后面在对非线性的实现，但是后面在真正实现代码的时候不太想把线性的简单代码单独实现出来了，就一口气实现了**方法genXjOfTheta**，所以现在看起来Linear和Nonlinear这两个类中各自实现的东西已经没有什么太大差别了。甚至可以抛去不要了。不过为了在Main中看起来更好看一些，我还是先保留下来了。
 #### OptiMethod.java
